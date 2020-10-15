@@ -1,6 +1,6 @@
 package service;
 
-import dao.Customer;
+import model.Customer;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +12,9 @@ public class ResponseDto {
     public ResponseDto(){
 
     };
+    public ResponseDto(Map<String, String> criteriars) {
+        this.criteriars = criteriars;
+    }
 
     public ResponseDto(List<Customer> resultList, Map<String, String> criteriars) {
         this.resultList = resultList;

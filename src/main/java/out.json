@@ -1,13 +1,8 @@
 {
   "type":"search",
   "results":[
-    {"criteria":{"lastName":"Иванов"},
-      "results":[
-        {"lastName":"Иванов","firstName":"Сергей"},
-        {"lastName":"Сысоев","firstName":"Семен"}
-      ]
-    },
-    {"criteria":{"lastName":"Иванов"},
+    {
+      "criteria":{"lastName":"Иванов"},
       "results":[
         {"lastName":"Иванов","firstName":"Сергей"},
         {"lastName":"Сысоев","firstName":"Семен"}

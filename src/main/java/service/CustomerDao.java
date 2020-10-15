@@ -1,6 +1,7 @@
 package service;
 
-import dao.Customer;
+import model.Customer;
+import model.SearchRequest;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -71,8 +72,8 @@ public class CustomerDao {
     }
 
 
-        public static void searchMapping (List <SearchRequest> searchRequests) throws SQLException {
-
+        public static List <ResponseDto> searchMapping (List <SearchRequest> searchRequests) throws SQLException {
+           List <ResponseDto> responseDto = new ArrayList<>();
             for (int i = 0; i < searchRequests.size(); i++) {
                 Map<String, String> criterias = new HashMap<>();
                 SearchRequest searchRequest = searchRequests.get(i);
@@ -80,29 +81,25 @@ public class CustomerDao {
                     case ("lastName"):
                         System.out.println("Да есть тут имя " + searchRequest.getValue());
                         criterias.put("lastName", searchRequest.getValue());
-                        ResponseDto xzt = new ResponseDto(findByLastName(searchRequest.getValue()), criterias);
-                        System.out.println(xzt.toString());
-                      //  return new ResponseDto
+                        responseDto.add(new ResponseDto(findByLastName(searchRequest.getValue()), criterias));
                         break;
                     case ("badCustomers"):
                         System.out.println("Да есть тут пассивные покупатели " + searchRequest.getValue());
                         criterias.put("badCustomers", searchRequest.getValue());
-                        ResponseDto xzz = new ResponseDto(findBadCustomers(Integer.parseInt(searchRequest.getValue())), criterias);
-                        System.out.println(xzz.toString());
-                      //  return new ResponseDto(resultList, criterias);
+                        responseDto.add(new ResponseDto(findBadCustomers(Integer.parseInt(searchRequest.getValue())), criterias));
                         break;
                     case ("maxExpenses"):
                         SearchRequest minExpenses = searchRequests.get(i - 1);
+                        criterias.put("maxExpenses", searchRequest.getValue());
                         if (minExpenses.getField().equals("minExpenses")) {
                             System.out.println(findByExpenses(Integer.parseInt(minExpenses.getValue()),Integer.parseInt(searchRequest.getValue())));
-                        } else {
-                            System.out.println("Неправильный запрос");
+                            criterias.put("minExpenses", searchRequests.get(i - 1).getValue());
+                            responseDto.add (new ResponseDto(findByExpenses(Integer.parseInt(minExpenses.getValue()),Integer.parseInt(searchRequest.getValue())), criterias));
                         }
-                        criterias.put("maxExpenses", searchRequest.getValue());
-                        criterias.put("minExpenses", searchRequests.get(i - 1).getValue());
-                        ResponseDto xz = new ResponseDto(findByExpenses(Integer.parseInt(minExpenses.getValue()),Integer.parseInt(searchRequest.getValue())), criterias);
-                        System.out.println(xz.toString());
-                    //    return new ResponseDto(findByExpenses(Integer.parseInt(minExpenses.getValue()),Integer.parseInt(searchRequest.getValue())), criterias);
+                        else {
+                            System.out.println("Неправильный запрос");
+                            responseDto.add(new ResponseDto(criterias));
+                        }
                         break;
                     case ("productName"):
                         SearchRequest minTimes = searchRequests.get(i - 1);
@@ -110,16 +107,21 @@ public class CustomerDao {
                         if (minTimes.getField().equals("minTimes")) {
                             System.out.println(findByProductName(searchRequest.getValue(), Integer.parseInt(minTimes.getValue())));
                             criterias.put("minTimes", minTimes.getValue());
-                            ResponseDto xzs = new ResponseDto(findByProductName(searchRequest.getValue(),Integer.parseInt(minTimes.getValue())),criterias);
-                            System.out.println(xzs);
+                            responseDto.add(new ResponseDto(findByProductName(searchRequest.getValue(),Integer.parseInt(minTimes.getValue())),criterias));
+
                         } else {
                             System.out.println("Неправильный запрос");
+                            responseDto.add(new ResponseDto(criterias));
                        }
                         break;
+                    case ("minExpenses"): case ("minTimes"): break;
+                    default:
+                        System.out.println("Неправильный запрос");
+                        responseDto.add(new ResponseDto(criterias));
+                        break;
                 }
-
-
             }
+             return responseDto;
         }
     }
 

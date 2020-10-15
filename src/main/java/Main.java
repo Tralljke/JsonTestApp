@@ -1,12 +1,4 @@
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import service.SearchRequest;
-
-import java.io.*;
 import java.sql.SQLException;
-import java.util.*;
 
 import static service.JSONService.*;
 
